@@ -7,10 +7,10 @@ dotenv.config();
 
 // Database configuration
 const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'electronics_store',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER ,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME ,
 };
 
 // Function to hash password
@@ -71,7 +71,7 @@ async function createDatabase() {
     console.log('Tables created successfully.');
 
     // Hash passwords for sample users
-    const adminPassword = await hashPassword('admin'); // Hash password for admin
+    const adminPassword = await hashPassword(process.env.PASSWORD_ADMIN); // Hash password for admin
 
     // Insert sample data into `users` table
     await connection.query(
