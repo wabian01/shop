@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import { useForm } from "react-hook-form";
 import { addProduct } from "../services/productService";
 
 const AddProduct = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
+  const [description, setDescription] = useState("");
 
   const onSubmit = async (data) => {
     try {
+      data.description = description; // Thêm description vào data trước khi gửi
       await addProduct(data); // Gọi hàm addProduct từ productService
       reset();
+      setDescription(""); // Reset trình soạn thảo
     } catch (error) {
       console.error("Failed to create Product", error);
     }
+  };
+
+  const handleDescriptionChange = (value) => {
+    console.log('anhdo',value)
+    setDescription(value);
+    setValue("description", value); // Cập nhật giá trị description trong form
   };
 
   return (
@@ -34,10 +45,7 @@ const AddProduct = () => {
           <label className="label">
             <span className="label-text">Description</span>
           </label>
-          <textarea
-            {...register('description', { required: true })}
-            className="textarea textarea-bordered w-full"
-          />
+          <ReactQuill theme="snow" value={description} onChange={handleDescriptionChange} />
           {errors.description && <span className="text-red-500">This field is required</span>}
         </div>
 

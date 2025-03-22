@@ -22,6 +22,16 @@ export const getProducts = async () => {
   }
 };
 
+export const getProductById = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product detail:", error);
+    throw error;
+  }
+};
+
 export const addProduct = async (productData) => {
   try {
     const response = await axios.post(API_URL, productData, getAuthHeader());

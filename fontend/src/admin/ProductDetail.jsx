@@ -33,7 +33,6 @@ const ProductDetail = ({ product, onDelete, onUpdate }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{product.name}</h2>
-        <p>{product.description}</p>
         <div className="card-actions justify-around">
           <div className="flex space-x-4 mt-4">
             <button onClick={handleDelete} className="btn btn-error">
