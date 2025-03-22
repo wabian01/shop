@@ -5,22 +5,22 @@ import { useAuth } from "../context/AuthProvider";
 import Logout from "./Logout";
 
 const NavBar = () => {
-    const {isAuthenticated,role} = useAuth()
-    const navItems= (
-        <>
-        <li>
-        <Link href="/">Home</Link>
+  const { isAuthenticated, role } = useAuth();
+  const navItems = (
+    <>
+      <li>
+        <Link to="/">Home</Link>
       </li>
       <li>
-        <Link href="/contact">Contact</Link>
+        <Link to="/contact">Contact</Link>
       </li>
       <li>
-        <Link href="/about">About</Link>
+        <Link to="/about">About</Link>
       </li>
-      </>
-    )
+    </>
+  );
   return (
-    <div className="navbar bg-base-100 shadow-sm px-20">
+    <div className="navbar bg-base-100 shadow-sm px-20 sticky top-0 z-9999">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -44,32 +44,35 @@ const NavBar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-          
             {navItems}
           </ul>
         </div>
         <a className="text-2xl font-bold cursor-pointer">WABIAN</a>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          {navItems}
-        </ul>
+        <ul className="menu menu-horizontal px-1">{navItems}</ul>
       </div>
       <div className="navbar-end">
         {isAuthenticated ? (
-            <>
-            {role === "admin" && <Link to="/admin" className="btn bg-black text-white">Admin</Link>}
+          <>
+            {role === "admin" && (
+              <Link to="/admin" className="btn bg-black text-white">
+                Admin
+              </Link>
+            )}
             <Logout />
-            </>
-        ):(
-        <>
-                <a className="btn bg-black text-white" onClick={() => document.getElementById("my_modal_3").showModal()}>
-                    Login
-                </a>
-                <Login />
-                </>
+          </>
+        ) : (
+          <>
+            <a
+              className="btn bg-black text-white"
+              onClick={() => document.getElementById("my_modal_3").showModal()}
+            >
+              Login
+            </a>
+            <Login />
+          </>
         )}
-       
       </div>
     </div>
   );

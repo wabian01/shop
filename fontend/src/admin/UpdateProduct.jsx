@@ -1,18 +1,23 @@
-import { useState } from "react";
+
+import { useForm } from "react-hook-form";
 import { updateProduct } from "../services/productService";
+import ReactQuill from "react-quill-new";
 
 const UpdateProduct = ({ product, onClose, onUpdate }) => {
-  const [name, setName] = useState(product.name);
-  const [description, setDescription] = useState(product.description);
-  const [price, setPrice] = useState(product.price);
-  const [category, setCategory] = useState(product.category);
-  const [imageUrl, setImageUrl] = useState(product.image_url);
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues: {
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      category: product.category,
+      imageUrl: product.image_url,
+    },
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
-      const updatedProduct = { id: product.id, name, description, price, category, image_url: imageUrl };
-      await updateProduct(product.id, updatedProduct); // Gọi hàm updateProduct từ productService
+      const updatedProduct = { id: product.id, ...data, image_url: data.imageUrl };
+      await updateProduct(product.id, updatedProduct);
       onUpdate(updatedProduct);
       onClose();
     } catch (error) {
@@ -22,30 +27,27 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
 
   return (
     <div className="modal modal-open">
-      <div className="modal-box">
-        <h3 className="font-bold text-lg">Update Product</h3>
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="modal-box max-w-[800px]! h-[500px]">
+        <h3 className="font-bold text-lg bg-base-100 p-4">Update Product</h3>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="form-control">
             <label className="label">
               <span className="label-text">Name</span>
             </label>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              {...register("name", { required: true })}
               className="input input-bordered w-full"
-              required
             />
           </div>
-          <div className="form-control">
+          <div className="form-control h-[300px] overflow-auto">
             <label className="label">
               <span className="label-text">Description</span>
             </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="textarea textarea-bordered w-full"
-              required
+            <ReactQuill
+              theme="snow"
+              value={product.description}
+              onChange={(value) => setValue("description", value)}
             />
           </div>
           <div className="form-control">
@@ -55,10 +57,8 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
             <input
               type="number"
               step="0.01"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              {...register("price", { required: true })}
               className="input input-bordered w-full"
-              required
             />
           </div>
           <div className="form-control">
@@ -66,10 +66,8 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
               <span className="label-text">Category</span>
             </label>
             <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              {...register("category", { required: true })}
               className="select select-bordered w-full"
-              required
             >
               <option value="PC">PC</option>
               <option value="Laptop">Laptop</option>
@@ -82,13 +80,11 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
             </label>
             <input
               type="text"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
+              {...register("imageUrl", { required: true })}
               className="input input-bordered w-full"
-              required
             />
           </div>
-          <div className="modal-action">
+          <div className="modal-action bg-base-100 p-4">
             <button type="button" onClick={onClose} className="btn">
               Cancel
             </button>

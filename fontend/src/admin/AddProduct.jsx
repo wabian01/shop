@@ -20,7 +20,6 @@ const AddProduct = () => {
   };
 
   const handleDescriptionChange = (value) => {
-    console.log('anhdo',value)
     setDescription(value);
     setValue("description", value); // Cập nhật giá trị description trong form
   };
