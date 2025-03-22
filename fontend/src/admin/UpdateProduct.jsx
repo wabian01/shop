@@ -40,7 +40,7 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
               className="input input-bordered w-full"
             />
           </div>
-          <div className="form-control h-[300px] overflow-auto">
+          <div className="form-control max-h-[300px] overflow-auto">
             <label className="label">
               <span className="label-text">Description</span>
             </label>
