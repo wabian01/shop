@@ -16,7 +16,6 @@ const Signup = () => {
     try {
       const res = await registerUser(data.username, data.password); // Gọi hàm register từ authService
       if (res) {
-        toast.success("Signup Successfully");
         navigate("/");
         localStorage.setItem("token", JSON.stringify(res.token));
       }

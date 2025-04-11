@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: shop
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - shop-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  # Backend Service
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: backend
+    environment:
+      DB_HOST: mysql  # Sử dụng tên service làm hostname
+      DB_USER: root
+      DB_PASSWORD: 12345
+      DB_NAME: shop  # Khớp với tên biến trong db.js
+      JWT_SECRET: 444286e3af38e53252d5bdddb7359aa78f9adee7c2243ddf795ed158358fe2b7
+    ports:
+      - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - shop-network
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # Frontend Service (Vite)
+  frontend:
+    build:
+      context: ./fontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:80"  # Thay đổi từ 80 sang 3000 để phù hợp với Vite mặc định
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5000  # Hoặc http://backend:5000 nếu dùng internal network
+    depends_on:
+      - backend
+    networks:
+      - shop-network
+    volumes:
+      - ./fontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
+networks:
+  shop-network:
+    driver: bridge

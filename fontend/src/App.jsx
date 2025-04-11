@@ -10,7 +10,7 @@ const App = () => {
 
   return (
     <>
-      {location.pathname !== '/admin' && <NavBar />}
+      {location.pathname !== '/admin' && location.pathname !== '/signup' && <NavBar />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/product/:id" element={<Detail />} />
